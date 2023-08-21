@@ -143,7 +143,8 @@ public class Powerup : NetworkBehaviour
 
     void DestroyPowerUp()
     {
-        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+        AudioSource audioSource = GetComponent<AudioSource>();
+        AudioSource.PlayClipAtPoint(audioSource.clip, transform.position, audioSource.volume);
         numPowerUps -= 1;
        
         NetworkObject.Despawn(true);

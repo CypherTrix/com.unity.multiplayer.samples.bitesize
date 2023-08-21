@@ -274,6 +274,7 @@ AudioMixerController:
     - 754d56e7f71b2c44e9632038481f2987
     - dcebf82bf8e577c41b05933939e2fff7
     - 06931c9e2ff46d34e80394075bdac148
+    - f93b6f8e2b01e2544a59336fea3b5ea6
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -290,6 +291,7 @@ AudioMixerGroupController:
   - {fileID: -8602871781434457368}
   - {fileID: 1448873761122265222}
   - {fileID: -2913277217881132776}
+  - {fileID: 5911662368714589152}
   m_Volume: 00ce30009c0a9e541b31c214196c82ab
   m_Pitch: 335d0a5d2568fb046a567ca56793d150
   m_Send: 00000000000000000000000000000000
@@ -323,6 +325,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: eca2df4778dc1de47889227629830265
   m_FloatValues:
+    00ce30009c0a9e541b31c214196c82ab: -10.867776
     2a86cd2033c431644babe0d5f2959f5a: 0
     f5e5fa30196204845bff5008c07c79bb: 2.14
     b4be5840d9950e24fb701286d8358448: 1.64
@@ -330,22 +333,23 @@ AudioMixerSnapshotController:
     874cb2c03b7a465469236211582efe9e: 20
     f81089419a9840442846e42ce6293b86: 1
     552f3f71ab6fa34478e0c7c19ee96bbd: -1735
-    839361b1655dbba4cb126bd7fa8c7010: -27.943817
+    839361b1655dbba4cb126bd7fa8c7010: -28.712921
     0fce13b13feed564f97fbc5a13057a9e: 1.7
     da11ab6260d2e79419c64b0c655aebfa: 0.544
     3d27abe20740ad146867f63c0e0a3d3a: 0.0238
     8f58a1533fd34cf42977634d57a228e6: 100
-    e08573b39e7b75046ab759ae3bacf6a2: 15.462413
+    e08573b39e7b75046ab759ae3bacf6a2: -0.054452926
     b25da8d34440b8e4d94fa7958a78b291: 0.79
     5341fee3d5d66e44aa95001dc13b7272: 0
     835cbca4fed3c834487ec52bef3580a7: 0.467
     34dbf6150d8756d4993158cebf8cbd2b: 57
     daa7db25aa553fa428da197b0bbae082: -898
     f6ae7655fb83ac8418b1fe31e07274a9: -1317
+    9590e5853924086418ccb148b3cd106c: 0
     83e715b53e8adf14d85152c970c71222: 1
     f540cf26d5660dc4f96e58d1bc8bfcb2: 0.18
     27f3b3d6b7d52a240831b1b22e3e2412: 250
-    65b4450789d7a384393192195e2fdedd: -1.5191216
+    65b4450789d7a384393192195e2fdedd: -5
     501a43272ef6a734a8f7b3581f1a1cb2: 1
     f7b09847c1bfaf84f84abb42c78bc3c1: -4011
     220d8787fc2c57c4c86d223de5b982fa: -4430
@@ -363,10 +367,10 @@ AudioMixerSnapshotController:
     1a10659a8deba3e45b29e5112c0d84bc: 12.8
     4ec9a3dae1ed30544a472e8bd27291e7: -179
     7107916b3bb3b0b4a9265d84feda5522: 0.05
-    c30ba18b41912514eba651e949aea710: 20
+    c30ba18b41912514eba651e949aea710: 0
     7da902ebad182ce4cbeced9239e58345: -2933
     bd9b8bbc9b3fe244092d7fad818b5bc7: 133
-    335d0a5d2568fb046a567ca56793d150: 3.69
+    335d0a5d2568fb046a567ca56793d150: 1
     29fcdf7d9f6639c4db2b662561a5d35b: 100
     d4fe709db0a46684da0363631c7cdd0a: 0.612
     de9fe72e6c6eaa54bbafbf35bf2dd148: 20
@@ -430,6 +434,20 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &3121765371396193231
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 98719e3b8a234bc4daeeac456c2d8d18
+  m_EffectName: Attenuation
+  m_MixLevel: f0303cf0c55bf0541b46e6af3e89d6e6
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &3388253797197053273
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -486,6 +504,25 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &5911662368714589152
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShipWeapon
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: f93b6f8e2b01e2544a59336fea3b5ea6
+  m_Children: []
+  m_Volume: 9590e5853924086418ccb148b3cd106c
+  m_Pitch: 465c2b6a4127f4f4a966f9150ad0a7d3
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 3121765371396193231}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!244 &5915814188741926004
 AudioMixerEffectController:
   m_ObjectHideFlags: 3

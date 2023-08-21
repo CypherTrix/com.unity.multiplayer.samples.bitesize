@@ -30,6 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100000}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
@@ -38,7 +39,6 @@ Transform:
   - {fileID: 1286672388234975269}
   - {fileID: 5839582501528190854}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &21200000
 SpriteRenderer:
@@ -185,7 +185,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: ca2c28c1c6a8f374b944b503567b9767, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.055
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -286,6 +286,7 @@ MonoBehaviour:
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 0
 --- !u!114 &5428136450459688780
@@ -331,13 +332,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5407604804647354228}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0.00000064820046, z: 0.0000006573968, w: 0.70710677}
   m_LocalPosition: {x: 0.02, y: 0, z: -0.055}
   m_LocalScale: {x: -1.2624413, y: 1.2624413, z: 1.2624413}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400000}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &1652267578451009005
 MeshFilter:
@@ -427,13 +428,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8691963684265257474}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0.00000064820046, z: 0.0000006573968, w: 0.70710677}
   m_LocalPosition: {x: 0.02, y: -0, z: -0.055}
   m_LocalScale: {x: 1.7593282, y: 1.7593282, z: 1.7593282}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400000}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &3108350129556198757
 MeshFilter:

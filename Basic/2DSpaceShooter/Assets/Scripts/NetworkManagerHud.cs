@@ -18,6 +18,7 @@ public class NetworkManagerHud : MonoBehaviour
     // This is needed to make the port field more convenient. GUILayout.TextField is very limited and we want to be able to clear the field entirely so we can't cache this as ushort.
     string m_PortString = "7777";
     string m_ConnectAddress = "127.0.0.1";
+    string m_Username = "Unknown";
     
     [SerializeField]
     UIDocument m_MainMenuUIDocument;
@@ -41,6 +42,8 @@ public class NetworkManagerHud : MonoBehaviour
     
     TextField m_PortField;
 
+    TextField m_UsernameField;
+
     TextElement m_MenuStatusText;
     
     TextElement m_InGameStatusText;
@@ -49,11 +52,13 @@ public class NetworkManagerHud : MonoBehaviour
     {
         // Only cache networking manager but not transport here because transport could change anytime.
         m_NetworkManager = GetComponent<NetworkManager>();
+        m_Username = System.Environment.MachineName;
 
         m_MainMenuRootVisualElement = m_MainMenuUIDocument.rootVisualElement;
         
         m_IPAddressField = m_MainMenuRootVisualElement.Q<TextField>("IPAddressField");
         m_PortField = m_MainMenuRootVisualElement.Q<TextField>("PortField");
+        m_UsernameField = m_MainMenuRootVisualElement.Q<TextField>("UsernameField");
         m_HostButton = m_MainMenuRootVisualElement.Q<Button>("HostButton");
         m_ClientButton = m_MainMenuRootVisualElement.Q<Button>("ClientButton");
         m_ServerButton = m_MainMenuRootVisualElement.Q<Button>("ServerButton");
@@ -65,7 +70,8 @@ public class NetworkManagerHud : MonoBehaviour
 
         m_IPAddressField.value = m_ConnectAddress;
         m_PortField.value = m_PortString;
-        
+        m_UsernameField.value = m_Username;
+
         m_HostButton.clickable.clickedWithEventInfo += HostButtonClicked;
         m_ServerButton.clickable.clickedWithEventInfo += ServerButtonClicked;
         m_ClientButton.clickable.clickedWithEventInfo += ClientButtonClicked;
@@ -83,6 +89,8 @@ public class NetworkManagerHud : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += OnOnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnOnClientDisconnectCallback;
     }
+
+    public string GetPlayerName() => m_Username;
 
     void OnOnClientConnectedCallback(ulong obj)
     {
@@ -107,6 +115,7 @@ public class NetworkManagerHud : MonoBehaviour
     {
         m_ConnectAddress = SanitizeInput(m_IPAddressField.value);
         m_PortString = SanitizeInput(m_PortField.value);
+        m_Username = m_UsernameField.value;
 
         if (m_ConnectAddress == "")
         {
