@@ -1,4 +1,5 @@
-﻿using CodeMonkey.HealthSystem.Scripts;
+﻿using System;
+using CodeMonkey.HealthSystem.Scripts;
 using DamageNumbersPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -112,8 +113,12 @@ public class ShipControl : NetworkBehaviour,IDamageable {
 
     Rigidbody2D m_Rigidbody2D;
 
+    PlayerInputControls inputActions;
+
     void Awake() {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        inputActions = new();
+        inputActions.Player.Enable();
         m_ObjectPool = GameObject.FindWithTag(s_ObjectPoolTag).GetComponent<NetworkObjectPool>();
         Assert.IsNotNull(m_ObjectPool, $"{nameof(NetworkObjectPool)} not found in scene. Did you apply the {s_ObjectPoolTag} to the GameObject?");
 
@@ -163,25 +168,16 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     }
 
     void OnHealthChanged(int previousValue, int newValue) {
-        int diff = newValue - previousValue;
-        damageNumbersHealth.Spawn(transform.position, diff);
-        SetHealthBarValue(newValue);
-    }
-
-    public void TakeDamage(int amount) {
-        Health.Value = Health.Value - amount;
-        m_FrictionEffectStartTimer.Value = NetworkManager.LocalTime.TimeAsFloat;
-
-        if (Health.Value <= 0) {
-            Health.Value = 0;
-
-            //todo: reset all buffs
-
-            Health.Value = 100;
-            transform.position = NetworkManager.GetComponent<RandomPositionPlayerSpawner>().GetNextSpawnPosition();
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-            GetComponent<Rigidbody2D>().angularVelocity = 0;
+        int diff = Math.Abs(newValue - previousValue);
+        if (newValue > previousValue) {
+            //Heal
+        damageNumbersHealth.Spawn(transform.position, diff,Color.green);
+        } else {
+            //damage
+            diff *= -1;
+        damageNumbersHealth.Spawn(transform.position, diff,Color.red);
         }
+        SetHealthBarValue(newValue);
     }
 
     void Fire(Vector3 direction) {
@@ -303,7 +299,8 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         }
 
         // movement
-        int spin = 0;
+        int spin = (int)inputActions.Player.Movement.ReadValue<Vector2>().x *-1;
+        /*
         if (Input.GetKey(KeyCode.A)) {
             spin += 1;
         }
@@ -311,8 +308,9 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         if (Input.GetKey(KeyCode.D)) {
             spin -= 1;
         }
-
-        int moveForce = 0;
+*/
+        int moveForce = (int)inputActions.Player.Movement.ReadValue<Vector2>().y;
+        /*
         if (Input.GetKey(KeyCode.W)) {
             moveForce += 1;
         }
@@ -320,7 +318,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         if (Input.GetKey(KeyCode.S)) {
             moveForce -= 1;
         }
-
+*/
         if (m_OldMoveForce != moveForce || m_OldSpin != spin) {
             ThrustServerRpc(moveForce, spin);
             m_OldMoveForce = moveForce;
@@ -337,11 +335,11 @@ public class ShipControl : NetworkBehaviour,IDamageable {
             m_ThrustMain.startSize = 1.2f;
             GetComponent<AudioSource>().Play();
         }
-
-        // fire
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        // Fire Bullet
+        if (inputActions.Player.Attack.WasPerformedThisFrame()) {
             FireServerRpc();
         }
+        
     }
 
     // a check to see if there's currently a buff applied, returns ship to default color if not
@@ -414,11 +412,8 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         if (NetworkManager.Singleton.IsServer == false) {
             return;
         }
-        if ()
-        var asteroid = other.gameObject.GetComponent<Asteroid>();
-        if (asteroid != null) {
-            //TakeDamage(5);
-            Damage(asteroid.CollisionDamage);
+        if (other.gameObject.TryGetComponent(out ICollidable collidableObj)) {
+        Damage(collidableObj.CollisionDamage);
         }
     }
 
@@ -479,6 +474,18 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     }
 
     public void Damage(float amount) {
-        
+           Health.Value -= (int)amount;
+           m_FrictionEffectStartTimer.Value = NetworkManager.LocalTime.TimeAsFloat;
+
+        if (Health.Value <= 0) {
+            Health.Value = 0;
+
+            //todo: reset all buffs
+
+            Health.Value = 100;
+            transform.position = NetworkManager.GetComponent<RandomPositionPlayerSpawner>().GetNextSpawnPosition();
+            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            GetComponent<Rigidbody2D>().angularVelocity = 0;
+        }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5544503669640551715}
   - component: {fileID: 5910649685767980832}
   - component: {fileID: 7138944083445934549}
+  - component: {fileID: 9182979926707618943}
   m_Layer: 0
   m_Name: Damage Number Damage
   m_TagString: Untagged
@@ -72,7 +73,7 @@ MonoBehaviour:
     strike: 0
     alpha: 1
     customColor: 0
-    color: {r: 1, g: 0, b: 0.009498596, a: 1}
+    color: {r: 1, g: 1, b: 0, a: 1}
     mark: 0
     markColor: {r: 0, g: 0, b: 0, a: 0.5}
     horizontal: 0
@@ -201,7 +202,7 @@ MonoBehaviour:
   enableShakeFadeIn: 0
   shakeOffsetFadeIn: {x: 0, y: 1.5}
   shakeFrequencyFadeIn: 4
-  durationFadeOut: 0.2
+  durationFadeOut: 0.4
   enableOffsetFadeOut: 1
   offsetFadeOut: {x: 0.5, y: 0}
   enableScaleFadeOut: 0
@@ -474,10 +475,30 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 40188380812668853}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2122391967
+  m_SortingLayer: 8
   m_SortingOrder: 1000
   m_SortAtRoot: 0
+--- !u!114 &9182979926707618943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40188380812668853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &1264805243254614076
 GameObject:
   m_ObjectHideFlags: 0

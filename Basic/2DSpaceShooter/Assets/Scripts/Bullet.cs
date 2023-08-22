@@ -69,13 +69,10 @@ public class Bullet : NetworkBehaviour
             return;
         }
 
-        //if (otherObject.TryGetComponent<Asteroid>(out var asteroid))
-        //{
-        //    asteroid.Explode();
-        //    DestroyBullet();
-        //    return;
-        //}
         if (otherObject.TryGetComponent<IDamageable>(out var damageableObj)) {
+            if (otherObject.TryGetComponent(out ShipControl shipControl)) {
+                if (shipControl == m_Owner) return;
+            }
             damageableObj.Damage(m_Damage);
             DestroyBullet();
             return;
@@ -83,21 +80,6 @@ public class Bullet : NetworkBehaviour
 
         if (m_Bounce == false && otherObject.TryGetComponent(out Bullet _) == false) {
             DestroyBullet();
-            Debug.Log(otherObject.name);
-        }
-
-        //if (m_Bounce == false && (otherObject.CompareTag("Wall") || otherObject.CompareTag("Obstacle")))
-        //{
-        //    DestroyBullet();
-        //}
-
-        if (otherObject.TryGetComponent<ShipControl>(out var shipControl))
-        {
-            if (shipControl != m_Owner)
-            {
-                shipControl.TakeDamage(m_Damage);
-                DestroyBullet();
-            }
         }
     }
 }

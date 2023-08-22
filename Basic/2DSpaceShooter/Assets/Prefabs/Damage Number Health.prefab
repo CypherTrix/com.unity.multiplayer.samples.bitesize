@@ -53,7 +53,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4097034777433151714, guid: 5a349091a69937144918748d70d1845d, type: 2}
+  - {fileID: -112508593885672785, guid: 69e0ec4d526c5cf4e9fa2c42eed49173, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
     strike: 0
     alpha: 1
     customColor: 0
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 1, g: 1, b: 0, a: 1}
     mark: 0
     markColor: {r: 0, g: 0, b: 0, a: 0.5}
     horizontal: 0
@@ -241,22 +241,22 @@ MonoBehaviour:
     vertical: 0
     characterSpacing: 0
     size: 0
-  enableColorByNumber: 1
+  enableColorByNumber: 0
   colorByNumberSettings:
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.99607843, g: 0.3058824, b: 0.32722196, a: 1}
-      key1: {r: 1, g: 0.7607844, b: 0.03137255, a: 1}
-      key2: {r: 0.77689075, g: 0.7380953, b: 0.108263314, a: 0}
-      key3: {r: 0.30588236, g: 0.6901961, b: 0.27058825, a: 0}
+      key0: {r: 1, g: 0.8, b: 0.5, a: 1}
+      key1: {r: 1, g: 0, b: 0, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 16384
-      ctime1: 29876
-      ctime2: 40285
-      ctime3: 65535
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
       ctime4: 0
       ctime5: 0
       ctime6: 0
@@ -271,10 +271,10 @@ MonoBehaviour:
       atime7: 0
       m_Mode: 0
       m_ColorSpace: -1
-      m_NumColorKeys: 4
+      m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    fromNumber: 100
-    toNumber: 1
+    fromNumber: 10
+    toNumber: 100
   durationFadeIn: 0.2
   enableOffsetFadeIn: 1
   offsetFadeIn: {x: 0.5, y: 0}
@@ -285,7 +285,7 @@ MonoBehaviour:
   enableShakeFadeIn: 0
   shakeOffsetFadeIn: {x: 0, y: 1.5}
   shakeFrequencyFadeIn: 4
-  durationFadeOut: 0.2
+  durationFadeOut: 0.4
   enableOffsetFadeOut: 1
   offsetFadeOut: {x: 0.5, y: 0}
   enableScaleFadeOut: 0
@@ -378,13 +378,13 @@ MonoBehaviour:
     toNumber: 1000
     fromScale: 1
     toScale: 2
-  enableScaleOverTime: 1
+  enableScaleOverTime: 0
   scaleOverTime:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1.0141449
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -393,7 +393,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 0
+      value: 0.7
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
   enablePooling: 0
   poolSize: 50
   disableOnSceneLoad: 1
-  editorLastFont: Health3D
+  editorLastFont: Basic-Glow3D
   position: {x: 0, y: 0, z: 0}
 --- !u!210 &983575271641855256
 SortingGroup:
@@ -558,8 +558,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4878402252240663455}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2122391967
+  m_SortingLayer: 8
   m_SortingOrder: 1000
   m_SortAtRoot: 0
 --- !u!114 &4492070025579105325
@@ -635,7 +635,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4097034777433151714, guid: 5a349091a69937144918748d70d1845d, type: 2}
+  - {fileID: -112508593885672785, guid: 69e0ec4d526c5cf4e9fa2c42eed49173, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -722,7 +722,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4097034777433151714, guid: 5a349091a69937144918748d70d1845d, type: 2}
+  - {fileID: -112508593885672785, guid: 69e0ec4d526c5cf4e9fa2c42eed49173, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -766,16 +766,16 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5a349091a69937144918748d70d1845d, type: 2}
-  m_sharedMaterial: {fileID: -4097034777433151714, guid: 5a349091a69937144918748d70d1845d,
+  m_fontAsset: {fileID: 11400000, guid: 69e0ec4d526c5cf4e9fa2c42eed49173, type: 2}
+  m_sharedMaterial: {fileID: -112508593885672785, guid: 69e0ec4d526c5cf4e9fa2c42eed49173,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282757198
-  m_fontColor: {r: 0.30588236, g: 0.6901961, b: 0.27058825, a: 1}
+    rgba: 4279500544
+  m_fontColor: {r: 1, g: 0.23529412, b: 0.23529412, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
