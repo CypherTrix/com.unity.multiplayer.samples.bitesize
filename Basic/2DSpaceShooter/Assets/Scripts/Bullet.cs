@@ -1,11 +1,13 @@
-﻿using System;
+﻿using CodeMonkey.HealthSystem.Scripts;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 public class Bullet : NetworkBehaviour
 {
+    public const int BULLET_DAMAGE = 5;
     bool m_Bounce;
-    int m_Damage = 5;
+    int m_Damage = BULLET_DAMAGE;
     ShipControl m_Owner;
 
     public GameObject explosionParticle;
@@ -25,7 +27,7 @@ public class Bullet : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         // This is inefficient, the explosion object could be pooled.
-        GameObject ex = Instantiate(explosionParticle, transform.position + new Vector3(0, 0, -2), Quaternion.identity);
+        GameObject explodeParticles = Instantiate(explosionParticle, transform.position + new Vector3(0, 0, -2), Quaternion.identity);
     }
 
     private void DestroyBullet()
@@ -60,24 +62,34 @@ public class Bullet : NetworkBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        var otherObject = other.gameObject;
+        GameObject otherObject = other.gameObject;
 
         if (!NetworkManager.Singleton.IsServer || !NetworkObject.IsSpawned)
         {
             return;
         }
 
-        if (otherObject.TryGetComponent<Asteroid>(out var asteroid))
-        {
-            asteroid.Explode();
+        //if (otherObject.TryGetComponent<Asteroid>(out var asteroid))
+        //{
+        //    asteroid.Explode();
+        //    DestroyBullet();
+        //    return;
+        //}
+        if (otherObject.TryGetComponent<IDamageable>(out var damageableObj)) {
+            damageableObj.Damage(m_Damage);
             DestroyBullet();
             return;
         }
 
-        if (m_Bounce == false && (otherObject.CompareTag("Wall") || otherObject.CompareTag("Obstacle")))
-        {
+        if (m_Bounce == false && otherObject.TryGetComponent(out Bullet _) == false) {
             DestroyBullet();
+            Debug.Log(otherObject.name);
         }
+
+        //if (m_Bounce == false && (otherObject.CompareTag("Wall") || otherObject.CompareTag("Obstacle")))
+        //{
+        //    DestroyBullet();
+        //}
 
         if (otherObject.TryGetComponent<ShipControl>(out var shipControl))
         {

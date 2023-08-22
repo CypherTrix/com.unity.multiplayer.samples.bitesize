@@ -1,4 +1,5 @@
-﻿using DamageNumbersPro;
+﻿using CodeMonkey.HealthSystem.Scripts;
+using DamageNumbersPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,14 +26,14 @@ public class Buff {
     }
 };
 
-public class ShipControl : NetworkBehaviour {
+public class ShipControl : NetworkBehaviour,IDamageable {
     static string s_ObjectPoolTag = "ObjectPool";
 
     NetworkObjectPool m_ObjectPool;
 
     public GameObject BulletPrefab;
 
-    public DamageNumber damageNumbersHealth;
+    [SerializeField] private DamageNumber damageNumbersHealth;
 
     public AudioSource fireSound;
 
@@ -413,10 +414,11 @@ public class ShipControl : NetworkBehaviour {
         if (NetworkManager.Singleton.IsServer == false) {
             return;
         }
-
+        if ()
         var asteroid = other.gameObject.GetComponent<Asteroid>();
         if (asteroid != null) {
-            TakeDamage(5);
+            //TakeDamage(5);
+            Damage(asteroid.CollisionDamage);
         }
     }
 
@@ -474,5 +476,9 @@ public class ShipControl : NetworkBehaviour {
 
     void SetPlayerUIVisibility(bool visible) {
         m_RootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
+    public void Damage(float amount) {
+        
     }
 }
