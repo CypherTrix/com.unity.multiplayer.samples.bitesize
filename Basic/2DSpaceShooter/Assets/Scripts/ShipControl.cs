@@ -183,7 +183,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     void Fire(Vector3 direction) {
         fireSound.Play();
 
-        var damage = 5;
+        var damage = Bullet.BULLET_DAMAGE;
         if (QuadDamageTimer.Value > NetworkManager.ServerTime.TimeAsFloat) {
             damage = 20;
         }

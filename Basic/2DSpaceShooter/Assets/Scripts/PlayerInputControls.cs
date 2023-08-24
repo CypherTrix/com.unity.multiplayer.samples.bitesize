@@ -42,7 +42,7 @@ public partial class @PlayerInputControls: IInputActionCollection2, IDisposable
                     ""id"": ""275ebc62-edca-4e48-8313-edcf486b7ce4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 }
             ],

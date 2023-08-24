@@ -52,6 +52,14 @@ public class RandomPositionPlayerSpawner: MonoBehaviour
         response.Rotation = Quaternion.identity;
         response.Approved = true;
     }
+    void OnDrawGizmosSelected() {
+        Gizmos.color = Color.yellow;
+        if (m_SpawnPositions.Count > 0) {
+        foreach (var spawnPos in m_SpawnPositions)  {
+                Gizmos.DrawLine(transform.position, spawnPos);
+        }
+        }
+    }
 }
 
 enum SpawnMethod
