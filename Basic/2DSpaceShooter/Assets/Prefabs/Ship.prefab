@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400000}
   - component: {fileID: 5000000}
-  - component: {fileID: 5800000}
+  - component: {fileID: 252792853341367085}
   - component: {fileID: 11400004}
   - component: {fileID: 8200000}
   - component: {fileID: 8200002}
@@ -70,8 +70,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!58 &5800000
-CircleCollider2D:
+--- !u!60 &252792853341367085
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,8 +103,29 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.64
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 1.9355422, y: 0.27637148}
+      - {x: 0.98999953, y: 0.66049176}
+      - {x: -0.94739586, y: 1.7789696}
+      - {x: -0.98040587, y: 1.715247}
+      - {x: -0.39479584, y: 0.46770635}
+      - {x: -0.62122196, y: 0.46340752}
+      - {x: -0.5728659, y: -0.43961015}
+      - {x: -0.39123222, y: -0.3900833}
+      - {x: -1.0439403, y: -1.7143056}
+      - {x: 1.0860453, y: -0.61251986}
+      - {x: 2.0598614, y: -0.08397655}
+  m_UseDelaunayMesh: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 0

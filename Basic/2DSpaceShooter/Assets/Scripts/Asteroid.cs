@@ -34,8 +34,7 @@ public class Asteroid : NetworkBehaviour, IDamageable, ICollidable {
     // Use this for initialization
     void Start() {
         numAsteroids += 1;
-        healthSystem.Value = new(Size.Value * Bullet.BULLET_DAMAGE);
-        healthSystem.Value.OnDead += Explode;
+
     }
 
 
@@ -43,6 +42,10 @@ public class Asteroid : NetworkBehaviour, IDamageable, ICollidable {
     public override void OnNetworkSpawn() {
         var size = Size.Value;
         transform.localScale = new Vector3(size, size, size);
+        if (IsServer) {
+            healthSystem.Value = new(Size.Value * Bullet.BULLET_DAMAGE);
+        }
+            healthSystem.Value.OnDead += Explode;
     }
 
     public void Explode(object sender, System.EventArgs e) {

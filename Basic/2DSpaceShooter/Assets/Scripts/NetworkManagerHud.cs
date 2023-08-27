@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Unity.Netcode;
@@ -19,6 +20,8 @@ public class NetworkManagerHud : MonoBehaviour
     string m_PortString = "7777";
     string m_ConnectAddress = "127.0.0.1";
     string m_Username = "Unknown";
+
+    private static Dictionary<ulong, ClientPlayerData> clientPlayerData;
     
     [SerializeField]
     UIDocument m_MainMenuUIDocument;
@@ -52,7 +55,7 @@ public class NetworkManagerHud : MonoBehaviour
     {
         // Only cache networking manager but not transport here because transport could change anytime.
         m_NetworkManager = GetComponent<NetworkManager>();
-        m_Username = System.Environment.MachineName;
+        m_Username = Environment.MachineName;
 
         m_MainMenuRootVisualElement = m_MainMenuUIDocument.rootVisualElement;
         
@@ -90,7 +93,14 @@ public class NetworkManagerHud : MonoBehaviour
         NetworkManager.Singleton.OnClientDisconnectCallback += OnOnClientDisconnectCallback;
     }
 
-    public string GetPlayerName() => m_Username;
+    public static ClientPlayerData? GetPlayerData(ulong clientId) {
+
+        if (clientPlayerData.TryGetValue(clientId,out ClientPlayerData playerData)) {
+            return playerData;
+        }
+        Debug.LogError($"Client ID '{clientId}' was not found in PlayerData.");
+        return null;
+    }
 
     void OnOnClientConnectedCallback(ulong obj)
     {
@@ -100,8 +110,9 @@ public class NetworkManagerHud : MonoBehaviour
 
     void OnOnClientDisconnectCallback(ulong clientId)
     {
-        if ((NetworkManager.Singleton.IsServer && clientId != NetworkManager.ServerClientId))
+        if (NetworkManager.Singleton.IsServer && clientId != NetworkManager.ServerClientId)
         {
+            clientPlayerData.Remove(clientId);
             return;
         }
         ShowMainMenuUI(true);
@@ -154,6 +165,9 @@ public class NetworkManagerHud : MonoBehaviour
     {
         if (SetConnectionData())
         {
+            clientPlayerData = new() {
+                [NetworkManager.Singleton.LocalClientId] = new ClientPlayerData(m_Username, Color.white)
+            };
             NetworkManager.Singleton.StartHost();
         }
     }
@@ -162,6 +176,8 @@ public class NetworkManagerHud : MonoBehaviour
     {
         if (SetConnectionData())
         {
+            clientPlayerData = new();
+            clientPlayerData[NetworkManager.Singleton.LocalClientId] = new ClientPlayerData(m_Username, Color.white);
             NetworkManager.Singleton.StartClient();
             StopAllCoroutines();
             StartCoroutine(ShowConnectingStatus());
@@ -172,6 +188,7 @@ public class NetworkManagerHud : MonoBehaviour
     {
         if (SetConnectionData())
         {
+            clientPlayerData = new();
             m_NetworkManager.StartServer();
             ShowMainMenuUI(false);
             ShowInGameUI(true);

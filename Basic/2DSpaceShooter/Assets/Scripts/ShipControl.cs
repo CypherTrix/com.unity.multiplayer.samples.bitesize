@@ -144,7 +144,8 @@ public class ShipControl : NetworkBehaviour,IDamageable {
             LatestShipColor.Value = m_ShipGlowDefaultColor;
 
             //PlayerName.Value = $"Player {OwnerClientId}";
-            PlayerName.Value = FindAnyObjectByType<NetworkManagerHud>().GetPlayerName();
+            ClientPlayerData? playerData = NetworkManagerHud.GetPlayerData(NetworkManager.Singleton.LocalClientId);
+            PlayerName.Value = playerData?.PlayerName;
 
             if (!IsHost) {
                 SetPlayerUIVisibility(false);
@@ -181,7 +182,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     }
 
     void Fire(Vector3 direction) {
-        fireSound.Play();
+        PlayFireSoundClientRpc();
 
         var damage = Bullet.BULLET_DAMAGE;
         if (QuadDamageTimer.Value > NetworkManager.ServerTime.TimeAsFloat) {
@@ -201,6 +202,8 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         bullet.SetVelocity(velocity);
 
     }
+
+    [ClientRpc] void PlayFireSoundClientRpc() { fireSound.Play(); }
 
     void Update() {
         if (IsServer) {
