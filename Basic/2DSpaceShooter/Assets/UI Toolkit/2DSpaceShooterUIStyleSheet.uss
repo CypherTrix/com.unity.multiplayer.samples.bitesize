@@ -1,5 +1,5 @@
 * {
-    -unity-font-definition: url('project://database/Assets/Fonts/chintzy%20SDF.asset?fileID=11400000&guid=0f86c86d1283c774a8d75462d97fcde6&type=2#chintzy SDF');
+    -unity-font-definition: url('project://database/Assets/Fonts/kenvector_future%20SDF%201.asset?fileID=11400000&guid=edbaf88ac5b439f4e8bac9a7fee3f7ea&type=2#kenvector_future SDF 1');
     color: rgb(96, 174, 255);
     font-size: 34px;
     text-shadow: 1px 1px 0 rgb(0, 0, 0);
@@ -17,6 +17,7 @@
     align-items: stretch;
     height: 100%;
     flex-grow: 1;
+    -unity-font-definition: url('project://database/Assets/Fonts/kenvector_future%20SDF%201.asset?fileID=11400000&guid=edbaf88ac5b439f4e8bac9a7fee3f7ea&type=2#kenvector_future SDF 1');
 }
 
 .button-style {
@@ -238,4 +239,72 @@
     align-items: center;
     color: rgb(27, 27, 27);
     background-color: rgb(255, 177, 177);
+}
+
+.Menu-Button {
+    align-self: center;
+    -unity-font: url('project://database/Assets/Fonts/kenvector_future.ttf?fileID=12800000&guid=9dcee9ccbdde23e449e9b03ef3844992&type=3#kenvector_future');
+    -unity-font-definition: url('project://database/Assets/Fonts/kenvector_future%20SDF%201.asset?fileID=11400000&guid=edbaf88ac5b439f4e8bac9a7fee3f7ea&type=2#kenvector_future SDF 1');
+    font-size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 2px;
+    margin-bottom: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: auto;
+    height: 10%;
+    -unity-text-align: middle-center;
+    text-overflow: clip;
+    white-space: nowrap;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-text-outline-width: 2px;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.Menu-Button:hover {
+    color: rgb(1, 67, 178);
+    font-size: 45px;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-text-outline-width: 4px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    rotate: -15deg;
+    transition-duration: 0.3s;
+}
+
+.Menu-Button:disabled {
+    rotate: 0;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(67, 67, 67);
+    font-size: 40px;
+    -unity-text-outline-width: 2px;
+}
+
+.Menu-Label {
+    -unity-font-definition: url('project://database/Assets/Fonts/kenvector_future%20SDF%201.asset?fileID=11400000&guid=edbaf88ac5b439f4e8bac9a7fee3f7ea&type=2#kenvector_future SDF 1');
+    -unity-font: url('project://database/Assets/Fonts/kenvector_future.ttf?fileID=12800000&guid=9dcee9ccbdde23e449e9b03ef3844992&type=3#kenvector_future');
+    font-size: 40px;
+}
+
+.Menu-Seperator {
+    background-color: rgb(88, 88, 88);
+    margin-right: 50px;
+    margin-left: 50px;
+    height: 5px;
+    flex-direction: column-reverse;
+    align-items: auto;
+    align-self: stretch;
 }
