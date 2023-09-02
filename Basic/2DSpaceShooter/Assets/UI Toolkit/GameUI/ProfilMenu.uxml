@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/2DSpaceShooterUIStyleSheet.uss?fileID=7433441132597879392&amp;guid=bcbf16fef3f0e5a40887d466edf9c406&amp;type=3#2DSpaceShooterUIStyleSheet" />
+    <ui:VisualElement style="flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+        <ui:Label tabindex="-1" text="Profil" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
+        <ui:VisualElement name="Seperator" class="Menu-Seperator" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; width: 100%; height: auto; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; align-self: center;">
+            <ui:VisualElement style="flex-grow: 1; align-self: flex-start; background-color: rgba(32, 38, 41, 0.67); width: 50%; height: 100%; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
+                <ui:Label tabindex="-1" text="Player Stats" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
+                <ui:VisualElement name="Seperator" class="Menu-Seperator" />
+                <ui:Label tabindex="-1" text="Shoots : 0&#10;Kills : 0&#10;Death : 0&#10;K/D : 0%&#10;&#10;&#10;" display-tooltip-when-elided="true" name="PlayerStats" class="Menu-Label" style="white-space: nowrap; align-self: stretch; -unity-text-align: middle-left; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;" />
+                <ui:Button text="Reset Player" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetPlayer" class="Menu-Button" style="flex-grow: 1; align-self: auto; rotate: 0; font-size: 40px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: column; align-self: flex-start; background-color: rgba(32, 38, 41, 0.67); width: 50%; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; height: 100%;">
+                <ui:Label tabindex="-1" text="Player Ship" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
+                <ui:VisualElement name="Seperator" class="Menu-Seperator" />
+                <ui:VisualElement style="flex-grow: 1;">
+                    <ui:VisualElement name="PlayerShipImage" style="background-image: url(&apos;project://database/Assets/Sprites/ship.png?fileID=2800000&amp;guid=6032b1899b04de841b94d52688040780&amp;type=3#ship&apos;); -unity-background-scale-mode: scale-to-fit; position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
+                    <ui:VisualElement name="PlayerShipColor" style="background-image: url(&apos;project://database/Assets/Sprites/shipEmissive.png?fileID=2800000&amp;guid=3bebcb63304fdaa4d93edcb6f8bcc845&amp;type=3#shipEmissive&apos;); -unity-background-scale-mode: scale-to-fit; position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-background-image-tint-color: rgb(255, 255, 255);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; width: 100%; align-self: center; height: auto; flex-direction: row; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; flex-direction: row; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
+                <ui:EnumField label="Colors :" type="PlayerColors+PlayerColor, MainAssembly" focusable="false" name="ColorsEnum" style="width: 100%; height: auto; align-self: center; flex-grow: 1; flex-shrink: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; width: 100%; align-self: center; height: auto; flex-direction: row; margin-left: 25px; margin-right: 25px; margin-top: 0; margin-bottom: 25px;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; flex-direction: row; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
+                <ui:TextField picking-mode="Ignore" label="Player Name :" value="Pilot" max-length="12" keyboard-type="ASCIICapable" name="PlayerName" style="flex-grow: 1; align-self: center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

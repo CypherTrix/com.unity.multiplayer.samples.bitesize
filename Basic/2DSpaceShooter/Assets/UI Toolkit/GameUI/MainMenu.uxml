@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="SettingsMenu" src="project://database/Assets/UI%20Toolkit/GameUI/SettingsMenu.uxml?fileID=9197481963319205126&amp;guid=7a08fdeefe78e8a4dbdb8d39b74f6e58&amp;type=3#SettingsMenu" />
+    <ui:Template name="ProfilMenu" src="project://database/Assets/UI%20Toolkit/GameUI/ProfilMenu.uxml?fileID=9197481963319205126&amp;guid=c85a83ee8f291c04e9da91132243d8fb&amp;type=3#ProfilMenu" />
     <Style src="project://database/Assets/UI%20Toolkit/2DSpaceShooterUIStyleSheet.uss?fileID=7433441132597879392&amp;guid=bcbf16fef3f0e5a40887d466edf9c406&amp;type=3#2DSpaceShooterUIStyleSheet" />
     <ui:VisualElement name="Menu" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0); flex-direction: row;">
         <ui:VisualElement name="LeftSide" style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); align-self: flex-start; width: 40%; height: 100%; margin-left: 50px; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-items: center; justify-content: center;">
@@ -7,6 +8,7 @@
             <ui:VisualElement name="Seperator" class="Menu-Seperator" />
             <ui:VisualElement name="Buttons" style="flex-grow: 1; align-self: center; justify-content: center; align-items: stretch; height: 100%; width: 100%; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
                 <ui:Button text="Play" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnPlay" tabindex="1" focusable="false" class="Menu-Button" style="margin-bottom: 40px;" />
+                <ui:VisualElement name="Seperator" class="Menu-Seperator" style="background-color: rgb(60, 60, 60);" />
                 <ui:Button text="Profil" name="BtnProfil" tabindex="2" focusable="false" class="Menu-Button" />
                 <ui:Button text="Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnSettings" tabindex="3" focusable="false" class="Menu-Button" />
                 <ui:VisualElement name="Seperator" class="Menu-Seperator" style="background-color: rgb(60, 60, 60);" />
@@ -15,6 +17,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="RightSide" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; width: 60%; height: 100%; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
             <ui:Instance template="SettingsMenu" name="SettingsMenu" style="width: 100%; height: 100%; display: none;" />
+            <ui:Instance template="ProfilMenu" name="ProfilMenu" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
