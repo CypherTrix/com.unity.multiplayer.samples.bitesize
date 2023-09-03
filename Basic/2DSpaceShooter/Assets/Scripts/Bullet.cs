@@ -1,49 +1,48 @@
 ﻿using CodeMonkey.HealthSystem.Scripts;
-using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Bullet : NetworkBehaviour
-{
+public class Bullet : NetworkBehaviour {
     public const int BULLET_DAMAGE = 5;
     bool m_Bounce;
     int m_Damage = BULLET_DAMAGE;
+    Color m_Color = Color.red;
     ShipControl m_Owner;
 
     public GameObject explosionParticle;
 
-    public void Config(ShipControl owner, int damage, bool bounce, float lifetime)
-    {
+    public void Config(ShipControl owner, int damage, bool bounce, float lifetime, Color playerColor) {
         m_Owner = owner;
         m_Damage = damage;
         m_Bounce = bounce;
-        if (IsServer)
-        {
+        m_Color = playerColor;
+        GetComponent<SpriteRenderer>().material.SetColor("_Color", m_Color);
+        GetComponent<SpriteRenderer>().material.SetColor("_EmissiveColor", m_Color);
+        foreach (var renderer in transform.GetComponentsInChildren<TrailRenderer>()) {
+            renderer.material.SetColor("_Color", m_Color);
+            renderer.material.SetColor("_EmissiveColor", m_Color);
+        }
+        if (IsServer) {
             // This is bad code don't use invoke.
             Invoke(nameof(DestroyBullet), lifetime);
         }
     }
 
-    public override void OnNetworkDespawn()
-    {
+    public override void OnNetworkDespawn() {
         // This is inefficient, the explosion object could be pooled.
         GameObject explodeParticles = Instantiate(explosionParticle, transform.position + new Vector3(0, 0, -2), Quaternion.identity);
     }
 
-    private void DestroyBullet()
-    {
-        if (!NetworkObject.IsSpawned)
-        {
+    private void DestroyBullet() {
+        if (!NetworkObject.IsSpawned) {
             return;
         }
 
         NetworkObject.Despawn(true);
     }
 
-    public void SetVelocity(Vector2 velocity)
-    {
-        if (IsServer)
-        {
+    public void SetVelocity(Vector2 velocity) {
+        if (IsServer) {
             var bulletRb = GetComponent<Rigidbody2D>();
             bulletRb.velocity = velocity;
             SetVelocityClientRpc(velocity);
@@ -51,21 +50,17 @@ public class Bullet : NetworkBehaviour
     }
 
     [ClientRpc]
-    void SetVelocityClientRpc(Vector2 velocity)
-    {
-        if (!IsHost)
-        {
+    void SetVelocityClientRpc(Vector2 velocity) {
+        if (!IsHost) {
             var bulletRb = GetComponent<Rigidbody2D>();
             bulletRb.velocity = velocity;
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other)
-    {
+    void OnCollisionEnter2D(Collision2D other) {
         GameObject otherObject = other.gameObject;
 
-        if (!NetworkManager.Singleton.IsServer || !NetworkObject.IsSpawned)
-        {
+        if (!NetworkManager.Singleton.IsServer || !NetworkObject.IsSpawned) {
             return;
         }
 

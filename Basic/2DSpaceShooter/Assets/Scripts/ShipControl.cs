@@ -1,11 +1,12 @@
-﻿using System;
-using CodeMonkey.HealthSystem.Scripts;
+﻿using CodeMonkey.HealthSystem.Scripts;
 using DamageNumbersPro;
+using System;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
+using static PlayerColors;
 
 public class Buff {
     public enum BuffType {
@@ -27,7 +28,7 @@ public class Buff {
     }
 };
 
-public class ShipControl : NetworkBehaviour,IDamageable {
+public class ShipControl : NetworkBehaviour, IDamageable {
     static string s_ObjectPoolTag = "ObjectPool";
 
     NetworkObjectPool m_ObjectPool;
@@ -35,6 +36,8 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     public GameObject BulletPrefab;
 
     [SerializeField] private DamageNumber damageNumbersHealth;
+
+    [SerializeField] private GameObject shootingPoint;
 
     public AudioSource fireSound;
 
@@ -123,6 +126,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         Assert.IsNotNull(m_ObjectPool, $"{nameof(NetworkObjectPool)} not found in scene. Did you apply the {s_ObjectPoolTag} to the GameObject?");
 
         m_ThrustMain = m_Thrust.main;
+        m_ShipGlowDefaultColor = PlayerPrefs.HasKey("Player_Color") ? PlayerColors.ToColor(((PlayerColor)PlayerPrefs.GetInt("Player_Color")).ToString()) : Color.white;
         m_ShipGlow.color = m_ShipGlowDefaultColor;
         m_IsBuffed = false;
 
@@ -172,11 +176,11 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         int diff = Math.Abs(newValue - previousValue);
         if (newValue > previousValue) {
             //Heal
-        damageNumbersHealth.Spawn(transform.position, diff,Color.green);
+            damageNumbersHealth.Spawn(transform.position, diff, Color.green);
         } else {
             //damage
             diff *= -1;
-        damageNumbersHealth.Spawn(transform.position, diff,Color.red);
+            damageNumbersHealth.Spawn(transform.position, diff, Color.red);
         }
         SetHealthBarValue(newValue);
     }
@@ -186,19 +190,19 @@ public class ShipControl : NetworkBehaviour,IDamageable {
 
         var damage = Bullet.BULLET_DAMAGE;
         if (QuadDamageTimer.Value > NetworkManager.ServerTime.TimeAsFloat) {
-            damage = 20;
+            damage = Bullet.BULLET_DAMAGE * 4;
         }
 
         var bounce = BounceTimer.Value > NetworkManager.ServerTime.TimeAsFloat;
 
         var bulletGo = m_ObjectPool.GetNetworkObject(BulletPrefab).gameObject;
-        bulletGo.transform.position = transform.position + direction;
+        bulletGo.transform.position = shootingPoint.transform.position + direction;
 
         var velocity = m_Rigidbody2D.velocity;
         velocity += (Vector2)(direction) * 10;
         bulletGo.GetComponent<NetworkObject>().Spawn(true);
         var bullet = bulletGo.GetComponent<Bullet>();
-        bullet.Config(this, damage, bounce, m_BulletLifetime);
+        bullet.Config(this, damage, bounce, m_BulletLifetime,m_ShipGlowDefaultColor);
         bullet.SetVelocity(velocity);
 
     }
@@ -302,7 +306,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         }
 
         // movement
-        int spin = (int)inputActions.Player.Movement.ReadValue<Vector2>().x *-1;
+        int spin = (int)inputActions.Player.Movement.ReadValue<Vector2>().x * -1;
         /*
         if (Input.GetKey(KeyCode.A)) {
             spin += 1;
@@ -342,7 +346,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         if (inputActions.Player.Attack.WasPerformedThisFrame()) {
             FireServerRpc();
         }
-        
+
     }
 
     // a check to see if there's currently a buff applied, returns ship to default color if not
@@ -367,22 +371,22 @@ public class ShipControl : NetworkBehaviour,IDamageable {
 
     public void AddBuff(Buff.BuffType buff) {
         if (buff == Buff.BuffType.Speed) {
-            SpeedBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            SpeedBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Speed);
         }
 
         if (buff == Buff.BuffType.Rotate) {
-            RotateBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            RotateBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Rotate);
         }
 
         if (buff == Buff.BuffType.Triple) {
-            TripleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            TripleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Triple);
         }
 
         if (buff == Buff.BuffType.Double) {
-            DoubleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            DoubleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Double);
         }
 
@@ -394,12 +398,12 @@ public class ShipControl : NetworkBehaviour,IDamageable {
         }
 
         if (buff == Buff.BuffType.QuadDamage) {
-            QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.QuadDamage);
         }
 
         if (buff == Buff.BuffType.Bounce) {
-            QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + 10;
+            QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Bounce);
         }
 
@@ -416,7 +420,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
             return;
         }
         if (other.gameObject.TryGetComponent(out ICollidable collidableObj)) {
-        Damage(collidableObj.CollisionDamage);
+            Damage(collidableObj.CollisionDamage);
         }
     }
 
@@ -469,6 +473,7 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     }
 
     void SetPlayerName(string playerName) {
+        m_PlayerName.style.color = m_ShipGlowDefaultColor;
         m_PlayerName.text = playerName;
     }
 
@@ -477,18 +482,23 @@ public class ShipControl : NetworkBehaviour,IDamageable {
     }
 
     public void Damage(float amount) {
-           Health.Value -= (int)amount;
-           m_FrictionEffectStartTimer.Value = NetworkManager.LocalTime.TimeAsFloat;
+        Health.Value -= (int)amount;
+        m_FrictionEffectStartTimer.Value = NetworkManager.LocalTime.TimeAsFloat;
 
         if (Health.Value <= 0) {
-            Health.Value = 0;
-
-            //todo: reset all buffs
-
-            Health.Value = 100;
-            transform.position = NetworkManager.GetComponent<RandomPositionPlayerSpawner>().GetNextSpawnPosition();
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-            GetComponent<Rigidbody2D>().angularVelocity = 0;
+            Die();
         }
+    }
+
+    public void Die() {
+        Health.Value = 0;
+
+        //todo: reset all buffs
+
+        Health.Value = 100;
+        transform.position = NetworkManager.GetComponent<RandomPositionPlayerSpawner>().GetNextSpawnPosition();
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        GetComponent<Rigidbody2D>().angularVelocity = 0;
+
     }
 }

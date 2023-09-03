@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -32,6 +33,7 @@ public class MainMenuUIController : MonoBehaviour {
     //Profil
     private VisualElement profilMenu;
     private Label playerStats;
+    private Label playerStatsValue;
     private Button resetPlayer;
     private VisualElement playerShipImage;
     private VisualElement playerShipColor;
@@ -68,6 +70,7 @@ public class MainMenuUIController : MonoBehaviour {
         //Profil Menu
         profilMenu = mainDoc.rootVisualElement.Q<VisualElement>("ProfilMenu");
         playerStats = mainDoc.rootVisualElement.Q<Label>("PlayerStats");
+        playerStatsValue = mainDoc.rootVisualElement.Q<Label>("PlayerStatsValue");
 
         playerShipColor = mainDoc.rootVisualElement.Q<VisualElement>("PlayerShipColor");
         playerShipImage = mainDoc.rootVisualElement.Q<VisualElement>("PlayerShipImage");
@@ -104,10 +107,25 @@ public class MainMenuUIController : MonoBehaviour {
         graphicsSelection.RegisterValueChangedCallback(evt => PlayerPrefs.SetInt(GRAPHIC_QUALITY, evt.newValue));
 
         //Profil
+        StringBuilder statsBuilder = new();
+        StringBuilder statsValueBuilder = new();
+        statsBuilder.AppendLine($"Shoots Fired");
+        statsValueBuilder.AppendLine("0x");
+        statsBuilder.AppendLine("Kills");
+        statsValueBuilder.AppendLine("0x");
+        statsBuilder.AppendLine($"Deaths");
+        statsValueBuilder.AppendLine("0x");
+        statsBuilder.AppendLine($"K/D Ratio");
+        statsValueBuilder.AppendLine("0%");
+        statsBuilder.AppendLine($"Use PowerUps");
+        statsValueBuilder.AppendLine("0x");
+        statsBuilder.AppendLine($"Play Time");
+        statsValueBuilder.AppendLine("0H");
+        playerStats.text = statsBuilder.ToString();
+        playerStatsValue.text = statsValueBuilder.ToString();
 
         enumColors.RegisterValueChangedCallback(evt => playerShipColor.style.unityBackgroundImageTintColor = PlayerColors.ToColor(evt.newValue.ToString()));
         enumColors.RegisterValueChangedCallback(evt => PlayerPrefs.SetInt(PLAYER_COLOR, (int)(PlayerColors.PlayerColor)evt.newValue));
-        enumColors.RegisterValueChangedCallback(evt => Debug.Log( (int)(PlayerColors.PlayerColor)evt.newValue));
         enumColors.value = PlayerPrefs.HasKey(PLAYER_COLOR) ? (PlayerColors.PlayerColor)PlayerPrefs.GetInt(PLAYER_COLOR) : PlayerColors.PlayerColor.White;
 
         playerName.RegisterValueChangedCallback(evt => PlayerPrefs.SetString(PLAYER_NAME,evt.newValue));
@@ -136,16 +154,6 @@ public class MainMenuUIController : MonoBehaviour {
     }
     #endregion
 
-    #region Settings
-    private void MuteBtn_onClick() {
-        //isMuted = !isMuted;
-        // StyleBackground bg = muteBtn.style.backgroundImage;
-        // bg.value = Background.FromSprite(isMuted ? muteSprite : unmuteSprite);
-        // muteBtn.style.backgroundImage = bg;
-
-        // audioMixer.SetFloat("Master_Volume", isMuted ? -80 : 0);
-    }
-    #endregion
 
 
 

@@ -4,13 +4,17 @@
         <ui:Label tabindex="-1" text="Profil" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
         <ui:VisualElement name="Seperator" class="Menu-Seperator" />
         <ui:VisualElement style="flex-grow: 1; flex-direction: row; width: 100%; height: auto; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; align-self: center;">
-            <ui:VisualElement style="flex-grow: 1; align-self: flex-start; background-color: rgba(32, 38, 41, 0.67); width: 50%; height: 100%; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); width: 50%; height: 100%; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px; align-self: flex-start;">
                 <ui:Label tabindex="-1" text="Player Stats" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
                 <ui:VisualElement name="Seperator" class="Menu-Seperator" />
-                <ui:Label tabindex="-1" text="Shoots : 0&#10;Kills : 0&#10;Death : 0&#10;K/D : 0%&#10;&#10;&#10;" display-tooltip-when-elided="true" name="PlayerStats" class="Menu-Label" style="white-space: nowrap; align-self: stretch; -unity-text-align: middle-left; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;" />
-                <ui:Button text="Reset Player" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetPlayer" class="Menu-Button" style="flex-grow: 1; align-self: auto; rotate: 0; font-size: 40px;" />
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+                    <ui:Label tabindex="-1" text="Shoots Fired&#10;Kills&#10;Death&#10;K/D&#10;&#10;&#10;" display-tooltip-when-elided="true" name="PlayerStats" parse-escape-sequences="true" class="Menu-Label" style="width: auto; flex-grow: 1; font-size: 32px; white-space: normal; -unity-text-align: upper-left; flex-shrink: 1;" />
+                    <ui:VisualElement name="Seperator" class="Menu-Seperator" style="height: auto; width: 5px; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
+                    <ui:Label tabindex="-1" text="0&#10;0&#10;0&#10;0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlayerStatsValue" style="-unity-text-align: upper-left; flex-shrink: 1; flex-grow: 1; font-size: 32px; white-space: normal;" />
+                </ui:VisualElement>
+                <ui:Button text="Reset Player" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetPlayer" class="Menu-Button" style="flex-grow: 1; align-self: auto; rotate: 0; font-size: 40px; color: rgb(188, 12, 37);" />
             </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1; flex-direction: column; align-self: flex-start; background-color: rgba(32, 38, 41, 0.67); width: 50%; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; height: 100%;">
+            <ui:VisualElement style="flex-grow: 1; align-self: flex-start; background-color: rgba(32, 38, 41, 0.67); width: 50%; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; height: 100%;">
                 <ui:Label tabindex="-1" text="Player Ship" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
                 <ui:VisualElement name="Seperator" class="Menu-Seperator" />
                 <ui:VisualElement style="flex-grow: 1;">
