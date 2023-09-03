@@ -160,7 +160,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-        SetPlayerName(PlayerName.Value.ToString().ToUpper());
+        SetPlayerName(PlayerName.Value.ToString());
     }
 
     public override void OnNetworkDespawn() {
