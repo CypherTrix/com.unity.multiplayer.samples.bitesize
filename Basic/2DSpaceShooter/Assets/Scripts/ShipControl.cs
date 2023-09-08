@@ -71,7 +71,8 @@ public class ShipControl : NetworkBehaviour, IDamageable {
 
     bool m_IsBuffed;
 
-    public NetworkVariable<FixedString32Bytes> PlayerName = new(new FixedString32Bytes(""));
+    private NetworkVariable<FixedString32Bytes> playerName = 
+        new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     [SerializeField]
     ParticleSystem m_Friction;
@@ -126,7 +127,13 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         Assert.IsNotNull(m_ObjectPool, $"{nameof(NetworkObjectPool)} not found in scene. Did you apply the {s_ObjectPoolTag} to the GameObject?");
 
         m_ThrustMain = m_Thrust.main;
-        m_ShipGlowDefaultColor = PlayerPrefs.HasKey("Player_Color") ? PlayerColors.ToColor(((PlayerColor)PlayerPrefs.GetInt("Player_Color")).ToString()) : Color.white;
+        if (PlayerPrefs.HasKey("Player_Color")) {
+            ColorUtility.TryParseHtmlString(PlayerPrefs.GetString("Player_Color"), out Color parseColor);
+            m_ShipGlowDefaultColor = parseColor;
+        } else {
+            m_ShipGlowDefaultColor = Color.white;
+        }
+
         m_ShipGlow.color = m_ShipGlowDefaultColor;
         m_IsBuffed = false;
 
@@ -148,8 +155,8 @@ public class ShipControl : NetworkBehaviour, IDamageable {
             LatestShipColor.Value = m_ShipGlowDefaultColor;
 
             //PlayerName.Value = $"Player {OwnerClientId}";
-            ClientPlayerData? playerData = NetworkManagerHud.GetPlayerData(NetworkManager.Singleton.LocalClientId);
-            PlayerName.Value = playerData?.PlayerName;
+            ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(NetworkManager.Singleton.LocalClientId);
+            playerName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
 
             if (!IsHost) {
                 SetPlayerUIVisibility(false);
@@ -160,7 +167,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-        SetPlayerName(PlayerName.Value.ToString());
+        SetPlayerName(playerName.Value.ToString());
     }
 
     public override void OnNetworkDespawn() {
@@ -456,7 +463,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
 
     [ServerRpc]
     public void SetNameServerRpc(string name) {
-        PlayerName.Value = name;
+        playerName.Value = name;
     }
 
     void SetWrapperPosition() {

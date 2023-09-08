@@ -19,8 +19,9 @@ public class NetworkManagerHud : MonoBehaviour {
     string m_PortString = "7777";
     string m_ConnectAddress = "127.0.0.1";
     string m_Username = "Unknown";
+    Color m_PlayerColor = Color.white;
 
-    private static Dictionary<ulong, ClientPlayerData> clientPlayerData;
+    private static Dictionary<ulong, ClientPlayerData> clientPlayerData = new();
 
     [SerializeField]
     UIDocument m_MainMenuUIDocument;
@@ -86,18 +87,23 @@ public class NetworkManagerHud : MonoBehaviour {
         NetworkManager.Singleton.OnClientDisconnectCallback += OnOnClientDisconnectCallback;
     }
 
-    public static ClientPlayerData? GetPlayerData(ulong clientId) {
+    public static ClientPlayerData GetPlayerData(ulong clientId) {
 
         if (clientPlayerData.TryGetValue(clientId, out ClientPlayerData playerData)) {
             return playerData;
+        } else {
+            Debug.LogError($"Client ID '{clientId}' was not found in PlayerData.");
+            return new ClientPlayerData("Unknown", Color.white);
         }
-        Debug.LogError($"Client ID '{clientId}' was not found in PlayerData.");
-        return null;
     }
 
     void OnOnClientConnectedCallback(ulong obj) {
+        if (clientPlayerData.TryAdd(NetworkManager.Singleton.LocalClientId, new ClientPlayerData(m_Username, m_PlayerColor))) {
+
+        }
         ShowMainMenuUI(false);
         ShowInGameUI(true);
+        
     }
 
     void OnOnClientDisconnectCallback(ulong clientId) {
@@ -116,7 +122,13 @@ public class NetworkManagerHud : MonoBehaviour {
         m_ConnectAddress = SanitizeInput(m_IPAddressField.value);
         m_PortString = SanitizeInput(m_PortField.value);
         m_Username = PlayerPrefs.HasKey("Player_Name") ? PlayerPrefs.GetString("Player_Name") : Environment.UserName;
-
+        if (PlayerPrefs.HasKey("Player_Color")) {
+            ColorUtility.TryParseHtmlString(PlayerPrefs.GetString("Player_Color"), out Color playercolor);
+            m_PlayerColor = playercolor;
+        } else {
+            Debug.LogWarning("Player Color Parse Error.");
+            m_PlayerColor = Color.white;
+        }
         if (m_ConnectAddress == "") {
             m_MenuStatusText.text = "IP Address Invalid";
             StopAllCoroutines();
@@ -146,17 +158,12 @@ public class NetworkManagerHud : MonoBehaviour {
 
     void HostButtonClicked(EventBase obj) {
         if (SetConnectionData()) {
-            clientPlayerData = new() {
-                [NetworkManager.Singleton.LocalClientId] = new ClientPlayerData(m_Username, Color.white)
-            };
             NetworkManager.Singleton.StartHost();
         }
     }
 
     void ClientButtonClicked(EventBase obj) {
         if (SetConnectionData()) {
-            clientPlayerData = new();
-            clientPlayerData[NetworkManager.Singleton.LocalClientId] = new ClientPlayerData(m_Username, Color.white);
             NetworkManager.Singleton.StartClient();
             StopAllCoroutines();
             StartCoroutine(ShowConnectingStatus());
@@ -224,7 +231,7 @@ public class NetworkManagerHud : MonoBehaviour {
 
         if (m_NetworkManager.IsServer) {
             var mode = m_NetworkManager.IsHost ? "Host" : "Server";
-            m_InGameStatusText.text = ($"ACTIVE ON PORT: {m_Transport.ConnectionData.Port.ToString()}");
+            m_InGameStatusText.text = ($"ACTIVE ON PORT: {m_Transport.ConnectionData.Port}");
             m_ShutdownButton.text = ($"Shutdown {mode}");
         } else {
             if (m_NetworkManager.IsConnectedClient) {

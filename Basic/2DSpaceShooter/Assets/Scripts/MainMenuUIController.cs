@@ -77,8 +77,7 @@ public class MainMenuUIController : MonoBehaviour {
         enumColors = mainDoc.rootVisualElement.Q<EnumField>("ColorsEnum");
         playerName = mainDoc.rootVisualElement.Q<TextField>("PlayerName");
 
-
-
+        enumColors.Init(PlayerColors.PlayerColorNames.White);
     }
 
     private void ResetPlayer_onClick() {
@@ -124,11 +123,23 @@ public class MainMenuUIController : MonoBehaviour {
         playerStats.text = statsBuilder.ToString();
         playerStatsValue.text = statsValueBuilder.ToString();
 
-        enumColors.RegisterValueChangedCallback(evt => playerShipColor.style.unityBackgroundImageTintColor = PlayerColors.ToColor(evt.newValue.ToString()));
-        enumColors.RegisterValueChangedCallback(evt => PlayerPrefs.SetInt(PLAYER_COLOR, (int)(PlayerColors.PlayerColor)evt.newValue));
-        enumColors.value = PlayerPrefs.HasKey(PLAYER_COLOR) ? (PlayerColors.PlayerColor)PlayerPrefs.GetInt(PLAYER_COLOR) : PlayerColors.PlayerColor.White;
+        // enumColors.RegisterValueChangedCallback(evt => playerShipColor.style.unityBackgroundImageTintColor = PlayerColors.ToColor(evt.newValue.ToString()));
+        enumColors.RegisterValueChangedCallback(evt => {
+            Enum.TryParse(evt.newValue.ToString(), true, out PlayerColors.PlayerColorNames playerColorName);
+            PlayerPrefs.SetString(PLAYER_COLOR, "#" + ColorUtility.ToHtmlStringRGB(PlayerColors.GetPlayerColor(playerColorName)));
+            playerShipColor.style.unityBackgroundImageTintColor = PlayerColors.GetPlayerColor(playerColorName);
+        });
+        //enumColors.RegisterValueChangedCallback(evt => PlayerPrefs.SetString(PLAYER_COLOR,ColorUtility.ToHtmlStringRGBA(PlayerColors.ToColor(evt.newValue.ToString()))));
+        if (PlayerPrefs.HasKey(PLAYER_COLOR)) {
+            ColorUtility.TryParseHtmlString(PlayerPrefs.GetString(PLAYER_COLOR), out Color parseColor);
+            PlayerColors.PlayerColorNames playerColorName = PlayerColors.GetPlayerColorNameByColor(parseColor);
+            enumColors.value = playerColorName;
+        } else {
+            //On First Startup set Color
+            PlayerPrefs.SetString(PLAYER_COLOR, "#" + ColorUtility.ToHtmlStringRGB(Color.white));
+        }
 
-        playerName.RegisterValueChangedCallback(evt => PlayerPrefs.SetString(PLAYER_NAME,evt.newValue));
+        playerName.RegisterValueChangedCallback(evt => PlayerPrefs.SetString(PLAYER_NAME, evt.newValue));
         playerName.value = PlayerPrefs.HasKey(PLAYER_NAME) ? PlayerPrefs.GetString(PLAYER_NAME) : Environment.UserName;
     }
 
