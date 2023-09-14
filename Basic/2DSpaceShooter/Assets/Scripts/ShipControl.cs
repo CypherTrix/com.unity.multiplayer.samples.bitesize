@@ -157,7 +157,6 @@ public class ShipControl : NetworkBehaviour, IDamageable {
             //PlayerName.Value = $"Player {OwnerClientId}";
             ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(NetworkManager.Singleton.LocalClientId);
             playerName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
-
             if (!IsHost) {
                 SetPlayerUIVisibility(false);
             }

@@ -93,13 +93,15 @@ public class NetworkManagerHud : MonoBehaviour {
             return playerData;
         } else {
             Debug.LogError($"Client ID '{clientId}' was not found in PlayerData.");
-            return new ClientPlayerData("Unknown", Color.white);
+            return new ClientPlayerData($"Unknown : {clientId}", Color.white);
         }
     }
 
     void OnOnClientConnectedCallback(ulong obj) {
         if (clientPlayerData.TryAdd(NetworkManager.Singleton.LocalClientId, new ClientPlayerData(m_Username, m_PlayerColor))) {
-
+            Debug.Log($"Add User Data {obj} : {m_Username}");
+        } else {
+            Debug.Log($"User ID {obj} alreedy added");
         }
         ShowMainMenuUI(false);
         ShowInGameUI(true);
