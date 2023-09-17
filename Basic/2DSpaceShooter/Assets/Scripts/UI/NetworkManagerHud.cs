@@ -21,7 +21,7 @@ public class NetworkManagerHud : MonoBehaviour {
     string m_Username = "Unknown";
     Color m_PlayerColor = Color.white;
 
-    private static Dictionary<ulong, ClientPlayerData> clientPlayerData = new();
+    private static Dictionary<ulong, ClientPlayerData> clientPlayerData;
 
     [SerializeField]
     UIDocument m_MainMenuUIDocument;
@@ -160,6 +160,7 @@ public class NetworkManagerHud : MonoBehaviour {
 
     void HostButtonClicked(EventBase obj) {
         if (SetConnectionData()) {
+            clientPlayerData = new();
             NetworkManager.Singleton.StartHost();
         }
     }

@@ -7,8 +7,27 @@ public class GameManager : MonoBehaviour {
 
     public GameState State = GameState.None;
     public static event Action<GameState> OnGameStateChanged;
+
+    [SerializeReference]
+    public static ClientPlayerData PlayerData;
+
     private void Awake() {
-        _instance = this;
+        if (_instance != null && _instance != this) {
+            Destroy(this);
+        } else {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        PlayerData = new(RandomPlayerGenerator.GetRandomName(), RandomPlayerGenerator.GetRandomColor());
+    }
+    private void Start() {
+
+        if (SaveManager.SaveFileExsis(SaveManager.PLAYER_SAVE_FILE_NAME) && SaveManager.LoadData(SaveManager.PLAYER_SAVE_FILE_NAME, out ClientPlayerData loadedPlayerData)) {
+            Debug.Log("Save File Loaded");
+        } else {
+            SaveManager.SaveData(SaveManager.PLAYER_SAVE_FILE_NAME, PlayerData);
+            Debug.Log("Save File Saved");
+        }
     }
 
     public void UpdateGameState(GameState newState) {
@@ -27,7 +46,7 @@ public class GameManager : MonoBehaviour {
         }
         OnGameStateChanged?.Invoke(newState);
     }
-    
+
 }
 
 public enum GameState : int {

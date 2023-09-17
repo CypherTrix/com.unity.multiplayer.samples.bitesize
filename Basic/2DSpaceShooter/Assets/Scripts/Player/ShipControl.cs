@@ -1,6 +1,7 @@
 ﻿using CodeMonkey.HealthSystem.Scripts;
 using DamageNumbersPro;
 using System;
+using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -71,9 +72,9 @@ public class ShipControl : NetworkBehaviour, IDamageable {
 
     bool m_IsBuffed;
 
-    private NetworkVariable<FixedString32Bytes> playerName = 
-        new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<FixedString32Bytes> playerName = new("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+    private NetworkVariable<FixedString32Bytes> playerDisplayName = new();
     [SerializeField]
     ParticleSystem m_Friction;
 
@@ -148,30 +149,45 @@ public class ShipControl : NetworkBehaviour, IDamageable {
     void Start() {
         DontDestroyOnLoad(gameObject);
         SetPlayerUIVisibility(true);
+
+        ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
+        //playerName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
+
+
+        SetPlayerName(playerData.PlayerName);
+        SetPlayerColor(playerData.PlayerColor);
+
     }
 
     public override void OnNetworkSpawn() {
+        Energy.OnValueChanged += OnEnergyChanged;
+        Health.OnValueChanged += OnHealthChanged;
+        playerDisplayName.OnValueChanged += UpdatePlayerNameDisplay;
+
         if (IsServer) {
             LatestShipColor.Value = m_ShipGlowDefaultColor;
 
+
             //PlayerName.Value = $"Player {OwnerClientId}";
-            ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(NetworkManager.Singleton.LocalClientId);
-            playerName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
+            //ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
+            //playerDisplayName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
+            //m_ShipGlowDefaultColor = playerData.PlayerDefaultColor;
+
             if (!IsHost) {
                 SetPlayerUIVisibility(false);
             }
         }
-        Energy.OnValueChanged += OnEnergyChanged;
-        Health.OnValueChanged += OnHealthChanged;
+
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-        SetPlayerName(playerName.Value.ToString());
+       // SetPlayerName(NetworkManagerHud.GetPlayerData(OwnerClientId).PlayerName);
     }
 
     public override void OnNetworkDespawn() {
         Energy.OnValueChanged -= OnEnergyChanged;
         Health.OnValueChanged -= OnHealthChanged;
+        playerDisplayName.OnValueChanged -= UpdatePlayerNameDisplay;
     }
 
     void OnEnergyChanged(int previousValue, int newValue) {
@@ -482,6 +498,16 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         m_PlayerName.style.color = m_ShipGlowDefaultColor;
         m_PlayerName.text = playerName;
     }
+    void SetPlayerColor(Color color) {
+        m_PlayerName.style.color = color;
+        m_ShipGlowDefaultColor = color;
+        m_ShipGlow.color = color;
+    }
+
+    void UpdatePlayerNameDisplay(FixedString32Bytes oldDisplayName, FixedString32Bytes newDisplayName) {
+        m_PlayerName.style.color = m_ShipGlowDefaultColor;
+        m_PlayerName.text = newDisplayName.ConvertToString();
+    }
 
     void SetPlayerUIVisibility(bool visible) {
         m_RootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
@@ -495,7 +521,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
             Die();
         }
     }
-
+    
     public void Die() {
         Health.Value = 0;
 
