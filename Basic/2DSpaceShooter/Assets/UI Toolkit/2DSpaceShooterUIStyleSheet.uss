@@ -1,13 +1,13 @@
 * {
     -unity-font-definition: url('project://database/Assets/Fonts/kenvector_future%20SDF%201.asset?fileID=11400000&guid=edbaf88ac5b439f4e8bac9a7fee3f7ea&type=2#kenvector_future SDF 1');
     color: rgb(96, 174, 255);
-    font-size: 34px;
     text-shadow: 1px 1px 0 rgb(0, 0, 0);
     letter-spacing: 3px;
     -unity-text-align: middle-center;
     -unity-font-style: bold;
     -unity-text-outline-width: 2.7px;
     -unity-text-outline-color: rgb(0, 0, 0);
+    font-size: 32px;
 }
 
 .layout-buttons {

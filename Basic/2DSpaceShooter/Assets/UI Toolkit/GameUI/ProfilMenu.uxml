@@ -8,9 +8,9 @@
                 <ui:Label tabindex="-1" text="Player Stats" parse-escape-sequences="true" display-tooltip-when-elided="true" class="Menu-Label" />
                 <ui:VisualElement name="Seperator" class="Menu-Seperator" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                    <ui:Label tabindex="-1" text="Shoots Fired&#10;Kills&#10;Death&#10;K/D&#10;&#10;&#10;" display-tooltip-when-elided="true" name="PlayerStats" parse-escape-sequences="true" class="Menu-Label" style="width: auto; flex-grow: 1; font-size: 32px; white-space: normal; -unity-text-align: upper-left; flex-shrink: 1;" />
-                    <ui:VisualElement name="Seperator" class="Menu-Seperator" style="height: auto; width: 5px; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
-                    <ui:Label tabindex="-1" text="0&#10;0&#10;0&#10;0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlayerStatsValue" style="-unity-text-align: upper-left; flex-shrink: 1; flex-grow: 1; font-size: 32px; white-space: normal;" />
+                    <ui:Label tabindex="-1" text="Shoots Fired&#10;Kills&#10;Death&#10;K/D&#10;Used PowerUps&#10;Time Played&#10;&#10;&#10;" display-tooltip-when-elided="true" name="PlayerStats" parse-escape-sequences="true" class="Menu-Label" style="width: auto; flex-grow: 1; font-size: 24px; white-space: nowrap; -unity-text-align: upper-left; flex-shrink: 0;" />
+                    <ui:VisualElement name="Seperator" class="Menu-Seperator" style="height: auto; width: 5px; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; flex-shrink: 0;" />
+                    <ui:Label tabindex="-1" text="0x&#10;0x&#10;0x&#10;0x&#10;0x&#10;hh-mm" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlayerStatsValue" style="-unity-text-align: upper-left; flex-shrink: 0; flex-grow: 1; white-space: nowrap; width: auto; font-size: 24px;" />
                 </ui:VisualElement>
                 <ui:Button text="Reset Player" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetPlayer" class="Menu-Button" style="flex-grow: 1; align-self: auto; rotate: 0; font-size: 40px; color: rgb(188, 12, 37);" />
             </ui:VisualElement>
@@ -25,13 +25,13 @@
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; width: 100%; align-self: center; height: auto; flex-direction: row; margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; flex-direction: row; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
-                <ui:EnumField label="Colors :" type="PlayerColors+PlayerColorNames, MainAssembly" focusable="false" name="ColorsEnum" include-obsolete-values="false" style="width: 100%; height: auto; align-self: center; flex-grow: 1; flex-shrink: 1; display: flex;" />
+                <ui:EnumField label="Colors :" type="PlayerColors+PlayerColorNames, MainAssembly" focusable="false" name="ColorsEnum" include-obsolete-values="false" style="font-size: 36px; align-self: center; white-space: nowrap; flex-shrink: 1;" />
                 <ui:DropdownField label="Colors :" index="-1" name="ColorsEnumold" style="flex-shrink: 1; flex-grow: 1; align-self: center; width: 100%; display: none;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; width: 100%; align-self: center; height: auto; flex-direction: row; margin-left: 25px; margin-right: 25px; margin-top: 0; margin-bottom: 25px;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(32, 38, 41, 0.67); margin-left: 25px; margin-right: 25px; margin-top: 25px; margin-bottom: 25px; flex-direction: row; padding-left: 25px; padding-right: 25px; padding-top: 25px; padding-bottom: 25px;">
-                <ui:TextField picking-mode="Ignore" label="Player Name :" value="Pilot" max-length="12" keyboard-type="ASCIICapable" name="PlayerName" style="flex-grow: 1; align-self: center;" />
+                <ui:TextField label="Player Name :" value="Pilot" max-length="12" keyboard-type="ASCIICapable" name="PlayerName" style="flex-grow: 1; font-size: 36px;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
