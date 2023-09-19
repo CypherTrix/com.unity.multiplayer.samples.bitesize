@@ -1,13 +1,11 @@
 ﻿using CodeMonkey.HealthSystem.Scripts;
 using DamageNumbersPro;
 using System;
-using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
-using static PlayerColors;
 
 public class Buff {
     public enum BuffType {
@@ -163,6 +161,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         Energy.OnValueChanged += OnEnergyChanged;
         Health.OnValueChanged += OnHealthChanged;
         playerDisplayName.OnValueChanged += UpdatePlayerNameDisplay;
+        gameObject.name = $"Player Ship : {OwnerClientId}";
 
         if (IsServer) {
             LatestShipColor.Value = m_ShipGlowDefaultColor;
@@ -181,7 +180,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-       // SetPlayerName(NetworkManagerHud.GetPlayerData(OwnerClientId).PlayerName);
+        // SetPlayerName(NetworkManagerHud.GetPlayerData(OwnerClientId).PlayerName);
     }
 
     public override void OnNetworkDespawn() {
@@ -209,6 +208,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
 
     void Fire(Vector3 direction) {
         PlayFireSoundClientRpc();
+        GameManager.Instance.PlayerData.ShootsFired++;
 
         var damage = Bullet.BULLET_DAMAGE;
         if (QuadDamageTimer.Value > NetworkManager.ServerTime.TimeAsFloat) {
@@ -224,7 +224,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         velocity += (Vector2)(direction) * 10;
         bulletGo.GetComponent<NetworkObject>().Spawn(true);
         var bullet = bulletGo.GetComponent<Bullet>();
-        bullet.Config(this, damage, bounce, m_BulletLifetime,m_ShipGlowDefaultColor);
+        bullet.Config(this, damage, bounce, m_BulletLifetime, m_ShipGlowDefaultColor);
         bullet.SetVelocity(velocity);
 
     }
@@ -392,6 +392,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
     }
 
     public void AddBuff(Buff.BuffType buff) {
+        GameManager.Instance.PlayerData.PowerUpsCollected++;
         if (buff == Buff.BuffType.Speed) {
             SpeedBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Speed);
@@ -412,12 +413,6 @@ public class ShipControl : NetworkBehaviour, IDamageable {
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Double);
         }
 
-        if (buff == Buff.BuffType.Health) {
-            Health.Value += 20;
-            if (Health.Value >= 100) {
-                Health.Value = 100;
-            }
-        }
 
         if (buff == Buff.BuffType.QuadDamage) {
             QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
@@ -425,10 +420,16 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         }
 
         if (buff == Buff.BuffType.Bounce) {
-            QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
+            BounceTimer.Value = NetworkManager.ServerTime.TimeAsFloat + Powerup.BUFF_DURATION;
             LatestShipColor.Value = Buff.GetColor(Buff.BuffType.Bounce);
         }
 
+        if (buff == Buff.BuffType.Health) {
+            Health.Value += 20;
+            if (Health.Value >= 100) {
+                Health.Value = 100;
+            }
+        }
         if (buff == Buff.BuffType.Energy) {
             Energy.Value += 50;
             if (Energy.Value >= 100) {
@@ -521,12 +522,19 @@ public class ShipControl : NetworkBehaviour, IDamageable {
             Die();
         }
     }
-    
+
     public void Die() {
         Health.Value = 0;
-
+        GameManager.Instance.PlayerData.Deaths++;
         //todo: reset all buffs
+        SpeedBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
+        RotateBuffTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
+        TripleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
+        DoubleShotTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
+        QuadDamageTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
+        BounceTimer.Value = NetworkManager.ServerTime.TimeAsFloat;
 
+        HandleBuffColors();
         Health.Value = 100;
         transform.position = NetworkManager.GetComponent<RandomPositionPlayerSpawner>().GetNextSpawnPosition();
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;

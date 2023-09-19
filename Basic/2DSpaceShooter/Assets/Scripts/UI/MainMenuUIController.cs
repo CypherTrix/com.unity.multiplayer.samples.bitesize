@@ -109,17 +109,17 @@ public class MainMenuUIController : MonoBehaviour {
         StringBuilder statsBuilder = new();
         StringBuilder statsValueBuilder = new();
         statsBuilder.AppendLine($"Shoots Fired");
-        statsValueBuilder.AppendLine("0x");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.ShootsFired}x");
         statsBuilder.AppendLine("Kills");
-        statsValueBuilder.AppendLine("0x");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.Kills}x");
         statsBuilder.AppendLine($"Deaths");
-        statsValueBuilder.AppendLine("0x");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.Deaths}x");
         statsBuilder.AppendLine($"K/D Ratio");
-        statsValueBuilder.AppendLine("0%");
-        statsBuilder.AppendLine($"Use PowerUps");
-        statsValueBuilder.AppendLine("0x");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.GetPlayerKD()}");
+        statsBuilder.AppendLine($"Used PowerUps");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.PowerUpsCollected}x");
         statsBuilder.AppendLine($"Play Time");
-        statsValueBuilder.AppendLine("0H");
+        statsValueBuilder.AppendLine($"{GameManager.Instance.PlayerData.GetTimePlayed()}");
         playerStats.text = statsBuilder.ToString();
         playerStatsValue.text = statsValueBuilder.ToString();
 

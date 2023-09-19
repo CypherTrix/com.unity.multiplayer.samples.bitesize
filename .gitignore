@@ -91,3 +91,6 @@ crashlytics-build.properties
 .DS_Store
 
 **/*_clone_*/
+Basic/2DSpaceShooter/Assets/Saves.meta
+Basic/2DSpaceShooter/Assets/Saves/player.save
+Basic/2DSpaceShooter/Assets/Saves/player.save.meta

@@ -1,25 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
 public struct ClientPlayerData {
+    //Data
     public string PlayerName;
     public Color PlayerColor;
+    //Achivments
+    public int ShootsFired;
+    public int Kills;
+    public int Deaths;
+    public int PowerUpsCollected;
+    public float PlayTime;
+    [NonSerialized] public bool debug;
 
+    public readonly float GetPlayerKD() {
+        try {
+            float ratio = (float)Kills / Deaths;
+            ratio = (float)Math.Round(ratio, 2);
+            return ratio;
+        } catch (Exception) {
+
+            return Kills;
+        }
+    }
+
+    public readonly string GetTimePlayed() {
+        TimeSpan t = TimeSpan.FromSeconds(PlayTime);
+
+        string answer = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms",
+                        t.Hours,
+                        t.Minutes,
+                        t.Seconds,
+                        t.Milliseconds);
+        return answer;
+    }
 
     public ClientPlayerData(string playerName, Color playerColor) {
         PlayerName = playerName;
         PlayerColor = playerColor;
-    }
-    public ClientPlayerData(string playerName = "") {
-        PlayerName = RandomPlayerGenerator.GetRandomName();
-        PlayerColor = RandomPlayerGenerator.GetRandomColor();
+        ShootsFired = 0;
+        Kills = 0;
+        Deaths = 0;
+        PowerUpsCollected = 0;
+        PlayTime = 0;
+#if UNITY_EDITOR
+        debug = true;
+#else
+        debug = false;
+#endif
     }
 }
-
-
-
 
 
 public static class RandomPlayerGenerator {
@@ -36,12 +69,12 @@ public static class RandomPlayerGenerator {
     }
 
     public static Color GetRandomColor() {
-        return Random.ColorHSV(0f, 1f, 1f, 1f, 0.8f, 1f);
- //       return new Color(
- //    Random.Range(0f, 1f),
- //    Random.Range(0f, 1f),
- //    Random.Range(0f, 1f), 1
- //);
+        return UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.8f, 1f);
+        //       return new Color(
+        //    Random.Range(0f, 1f),
+        //    Random.Range(0f, 1f),
+        //    Random.Range(0f, 1f), 1
+        //);
     }
 }
 

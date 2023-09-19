@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 public static class SaveManager {
-    public static readonly string ROOT_PATH = Application.persistentDataPath;
+    public static readonly string ROOT_PATH = Application.dataPath;
     public static readonly string FILE_PATH = "Saves";
     public static readonly string PLAYER_SAVE_FILE_NAME = "player";
     public static readonly string FILE_EXTENSION = ".save";
