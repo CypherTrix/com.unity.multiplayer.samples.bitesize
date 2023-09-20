@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Unity.Netcode;
@@ -9,20 +7,19 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(NetworkManager))]
 [DisallowMultipleComponent]
-public class NetworkManagerHud : MonoBehaviour {
-    NetworkManager m_NetworkManager;
+public class NetworkManagerHud : NetworkBehaviour {
+    [SerializeField] NetworkManager m_NetworkManager;
 
     UnityTransport m_Transport;
 
     // This is needed to make the port field more convenient. GUILayout.TextField is very limited and we want to be able to clear the field entirely so we can't cache this as ushort.
     string m_PortString = "7777";
     string m_ConnectAddress = "127.0.0.1";
-    string m_Username = "Unknown";
-    Color m_PlayerColor = Color.white;
 
     private static Dictionary<ulong, ClientPlayerData> clientPlayerData;
+
+    private NetworkVariable<int> connectedPlayerCount = new();
 
     [SerializeField]
     UIDocument m_MainMenuUIDocument;
@@ -50,10 +47,11 @@ public class NetworkManagerHud : MonoBehaviour {
 
     TextElement m_InGameStatusText;
 
+    TextElement m_ConnectedPlayerCount;
+
     void Awake() {
         // Only cache networking manager but not transport here because transport could change anytime.
-        m_NetworkManager = GetComponent<NetworkManager>();
-        m_Username = Environment.MachineName;
+        // m_NetworkManager = NetworkManager.Singleton;
 
         m_MainMenuRootVisualElement = m_MainMenuUIDocument.rootVisualElement;
 
@@ -67,6 +65,7 @@ public class NetworkManagerHud : MonoBehaviour {
         m_InGameRootVisualElement = m_InGameUIDocument.rootVisualElement;
         m_ShutdownButton = m_InGameRootVisualElement.Q<Button>("ShutdownButton");
         m_InGameStatusText = m_InGameRootVisualElement.Q<TextElement>("InGameStatusText");
+        m_ConnectedPlayerCount = m_InGameRootVisualElement.Q<TextElement>("ConnectedPlayerCount");
 
         m_IPAddressField.value = m_ConnectAddress;
         m_PortField.value = m_PortString;
@@ -77,6 +76,17 @@ public class NetworkManagerHud : MonoBehaviour {
         m_ShutdownButton.clickable.clickedWithEventInfo += ShutdownButtonClicked;
     }
 
+    private void OnClientCountChange(ulong clientID) {
+        if (IsServer) {
+            connectedPlayerCount.Value = m_NetworkManager.ConnectedClients.Count;
+        }
+
+    }
+
+    private void UpdateConnectedPlayerCountDisplay(int oldvar, int newvar) {
+        m_ConnectedPlayerCount.text = $"Player : {connectedPlayerCount.Value}";
+    }
+
     void Start() {
         m_Transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
 
@@ -84,8 +94,13 @@ public class NetworkManagerHud : MonoBehaviour {
         ShowInGameUI(false);
         ShowStatusText(false);
 
-        NetworkManager.Singleton.OnClientConnectedCallback += OnOnClientConnectedCallback;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnOnClientDisconnectCallback;
+        m_NetworkManager.OnClientConnectedCallback += OnOnClientConnectedCallback;
+        m_NetworkManager.OnClientDisconnectCallback += OnOnClientDisconnectCallback;
+
+        m_NetworkManager.OnClientConnectedCallback += OnClientCountChange;
+        m_NetworkManager.OnClientDisconnectCallback += OnClientCountChange;
+
+        connectedPlayerCount.OnValueChanged += UpdateConnectedPlayerCountDisplay;
     }
 
     public static ClientPlayerData GetPlayerData(ulong clientId) {
@@ -98,19 +113,19 @@ public class NetworkManagerHud : MonoBehaviour {
         }
     }
 
-    void OnOnClientConnectedCallback(ulong obj) {
-        if (clientPlayerData.TryAdd(NetworkManager.Singleton.LocalClientId, new ClientPlayerData(m_Username, m_PlayerColor))) {
-            Debug.Log($"Add User Data {obj} : {m_Username}");
+    void OnOnClientConnectedCallback(ulong clientId) {
+        if (clientPlayerData.TryAdd(m_NetworkManager.LocalClientId, new ClientPlayerData(GameManager.Instance.PlayerData.PlayerName, GameManager.Instance.PlayerData.PlayerColor))) {
+            Debug.Log($"Add User Data {clientId} : {GameManager.Instance.PlayerData.PlayerName}");
         } else {
-            Debug.Log($"User ID {obj} alreedy added");
+            Debug.Log($"User ID {clientId} alreedy added");
         }
         ShowMainMenuUI(false);
         ShowInGameUI(true);
-        
+
     }
 
     void OnOnClientDisconnectCallback(ulong clientId) {
-        if (NetworkManager.Singleton.IsServer && clientId != NetworkManager.ServerClientId) {
+        if (m_NetworkManager.IsServer && clientId != NetworkManager.ServerClientId) {
             clientPlayerData.Remove(clientId);
             return;
         }
@@ -124,14 +139,7 @@ public class NetworkManagerHud : MonoBehaviour {
     bool SetConnectionData() {
         m_ConnectAddress = SanitizeInput(m_IPAddressField.value);
         m_PortString = SanitizeInput(m_PortField.value);
-        m_Username = PlayerPrefs.HasKey("Player_Name") ? PlayerPrefs.GetString("Player_Name") : Environment.UserName;
-        if (PlayerPrefs.HasKey("Player_Color")) {
-            ColorUtility.TryParseHtmlString(PlayerPrefs.GetString("Player_Color"), out Color playercolor);
-            m_PlayerColor = playercolor;
-        } else {
-            Debug.LogWarning("Player Color Parse Error.");
-            m_PlayerColor = Color.white;
-        }
+
         if (m_ConnectAddress == "") {
             m_MenuStatusText.text = "IP Address Invalid";
             StopAllCoroutines();
@@ -162,13 +170,13 @@ public class NetworkManagerHud : MonoBehaviour {
     void HostButtonClicked(EventBase obj) {
         if (SetConnectionData()) {
             clientPlayerData = new();
-            NetworkManager.Singleton.StartHost();
+            m_NetworkManager.StartHost();
         }
     }
 
     void ClientButtonClicked(EventBase obj) {
         if (SetConnectionData()) {
-            NetworkManager.Singleton.StartClient();
+            m_NetworkManager.StartClient();
             StopAllCoroutines();
             StartCoroutine(ShowConnectingStatus());
         }
@@ -245,7 +253,8 @@ public class NetworkManagerHud : MonoBehaviour {
         }
     }
 
-    void OnDestroy() {
+    public override void OnDestroy() {
+        base.OnDestroy();
         if (m_HostButton != null) {
             m_HostButton.clickable.clickedWithEventInfo -= HostButtonClicked;
         }
@@ -263,5 +272,10 @@ public class NetworkManagerHud : MonoBehaviour {
         }
         m_NetworkManager.OnClientConnectedCallback -= OnOnClientConnectedCallback;
         m_NetworkManager.OnClientDisconnectCallback -= OnOnClientDisconnectCallback;
+
+        m_NetworkManager.OnClientConnectedCallback -= OnClientCountChange;
+        m_NetworkManager.OnClientDisconnectCallback -= OnClientCountChange;
+
+        connectedPlayerCount.OnValueChanged -= UpdateConnectedPlayerCountDisplay;
     }
 }

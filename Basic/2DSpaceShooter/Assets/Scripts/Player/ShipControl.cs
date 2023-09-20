@@ -72,7 +72,6 @@ public class ShipControl : NetworkBehaviour, IDamageable {
 
     private NetworkVariable<FixedString32Bytes> playerName = new("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    private NetworkVariable<FixedString32Bytes> playerDisplayName = new();
     [SerializeField]
     ParticleSystem m_Friction;
 
@@ -126,13 +125,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         Assert.IsNotNull(m_ObjectPool, $"{nameof(NetworkObjectPool)} not found in scene. Did you apply the {s_ObjectPoolTag} to the GameObject?");
 
         m_ThrustMain = m_Thrust.main;
-        if (PlayerPrefs.HasKey("Player_Color")) {
-            ColorUtility.TryParseHtmlString(PlayerPrefs.GetString("Player_Color"), out Color parseColor);
-            m_ShipGlowDefaultColor = parseColor;
-        } else {
-            m_ShipGlowDefaultColor = Color.white;
-        }
-
+        m_ShipGlowDefaultColor = Color.white;
         m_ShipGlow.color = m_ShipGlowDefaultColor;
         m_IsBuffed = false;
 
@@ -148,26 +141,24 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         DontDestroyOnLoad(gameObject);
         SetPlayerUIVisibility(true);
 
-        ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
-        //playerName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
+        //ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
+       // playerName.Value = GameManager.Instance.PlayerData.PlayerName;//!string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
 
-
-        SetPlayerName(playerData.PlayerName);
-        SetPlayerColor(playerData.PlayerColor);
+        //SetPlayerName(playerData.PlayerName);
+        //SetPlayerColor(playerData.PlayerColor);
 
     }
 
     public override void OnNetworkSpawn() {
         Energy.OnValueChanged += OnEnergyChanged;
         Health.OnValueChanged += OnHealthChanged;
-        playerDisplayName.OnValueChanged += UpdatePlayerNameDisplay;
         gameObject.name = $"Player Ship : {OwnerClientId}";
 
         if (IsServer) {
+            m_ShipGlowDefaultColor = GameManager.Instance.PlayerData.PlayerColor;
             LatestShipColor.Value = m_ShipGlowDefaultColor;
 
-
-            //PlayerName.Value = $"Player {OwnerClientId}";
+            playerName.Value = $"Player {OwnerClientId}";
             //ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
             //playerDisplayName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
             //m_ShipGlowDefaultColor = playerData.PlayerDefaultColor;
@@ -180,13 +171,13 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-        // SetPlayerName(NetworkManagerHud.GetPlayerData(OwnerClientId).PlayerName);
+        SetPlayerName(playerName.Value.ToString());
+        SetPlayerColor(m_ShipGlowDefaultColor);
     }
 
     public override void OnNetworkDespawn() {
         Energy.OnValueChanged -= OnEnergyChanged;
         Health.OnValueChanged -= OnHealthChanged;
-        playerDisplayName.OnValueChanged -= UpdatePlayerNameDisplay;
     }
 
     void OnEnergyChanged(int previousValue, int newValue) {
@@ -496,18 +487,12 @@ public class ShipControl : NetworkBehaviour, IDamageable {
     }
 
     void SetPlayerName(string playerName) {
-        m_PlayerName.style.color = m_ShipGlowDefaultColor;
         m_PlayerName.text = playerName;
     }
     void SetPlayerColor(Color color) {
         m_PlayerName.style.color = color;
         m_ShipGlowDefaultColor = color;
         m_ShipGlow.color = color;
-    }
-
-    void UpdatePlayerNameDisplay(FixedString32Bytes oldDisplayName, FixedString32Bytes newDisplayName) {
-        m_PlayerName.style.color = m_ShipGlowDefaultColor;
-        m_PlayerName.text = newDisplayName.ConvertToString();
     }
 
     void SetPlayerUIVisibility(bool visible) {

@@ -12,6 +12,9 @@
                     <ui:VisualElement name="HostPortNumberWrapper" class="layout-buttons" style="height: 25px; position: relative; flex-shrink: 0; flex-grow: 0; width: 368px; align-items: center; justify-content: center;">
                         <ui:Label text="CONNECTED ###.##.##.## : #####" display-tooltip-when-elided="true" name="InGameStatusText" style="-unity-text-align: middle-center; color: rgb(93, 168, 255); font-size: 18px; -unity-text-outline-width: 1.2px; flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                     </ui:VisualElement>
+                    <ui:VisualElement class="layout-buttons" style="height: 25px; position: relative; flex-shrink: 0; flex-grow: 0; width: 368px; align-items: center; justify-content: center;">
+                        <ui:Label text="Player : 0" display-tooltip-when-elided="true" name="ConnectedPlayerCount" style="-unity-text-align: middle-center; color: rgb(93, 168, 255); font-size: 18px; -unity-text-outline-width: 1.2px; flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

@@ -23,7 +23,7 @@ public struct ClientPlayerData {
             if (float.IsNaN(ratio)) {
                 return 0;
             } else {
-            return ratio;
+                return ratio;
             }
         } catch (DivideByZeroException) {
 
