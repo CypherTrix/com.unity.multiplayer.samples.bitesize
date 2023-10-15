@@ -140,13 +140,13 @@ public class ShipControl : NetworkBehaviour, IDamageable {
     void Start() {
         DontDestroyOnLoad(gameObject);
         SetPlayerUIVisibility(true);
-
-        //ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
-       // playerName.Value = GameManager.Instance.PlayerData.PlayerName;//!string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
-
-        //SetPlayerName(playerData.PlayerName);
-        //SetPlayerColor(playerData.PlayerColor);
-
+        if (IsOwner && IsLocalPlayer) {
+            if (IsServer) {
+                playerName.Value = GameManager.Instance.PlayerData.PlayerName;
+            } else {
+                SetNameServerRpc(GameManager.Instance.PlayerData.PlayerName);
+            }
+        }
     }
 
     public override void OnNetworkSpawn() {
@@ -154,25 +154,26 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         Health.OnValueChanged += OnHealthChanged;
         gameObject.name = $"Player Ship : {OwnerClientId}";
 
+        playerName.OnValueChanged += (_, newPlayerName) =>{ SetPlayerName(newPlayerName.ToString());};
+
         if (IsServer) {
             m_ShipGlowDefaultColor = GameManager.Instance.PlayerData.PlayerColor;
             LatestShipColor.Value = m_ShipGlowDefaultColor;
 
-            playerName.Value = $"Player {OwnerClientId}";
-            //ClientPlayerData playerData = NetworkManagerHud.GetPlayerData(OwnerClientId);
-            //playerDisplayName.Value = !string.IsNullOrEmpty(playerData.PlayerName) ? playerData.PlayerName : $"Player : {OwnerClientId + 1}";
-            //m_ShipGlowDefaultColor = playerData.PlayerDefaultColor;
+            //playerName.Value = $"Player {OwnerClientId}";
+             //playerName.Value = GameManager.Instance.PlayerData.PlayerName;
 
             if (!IsHost) {
                 SetPlayerUIVisibility(false);
             }
         }
 
+        if (IsOwner) m_ShipGlowDefaultColor = GameManager.Instance.PlayerData.PlayerColor;
         OnEnergyChanged(0, Energy.Value);
         OnHealthChanged(0, Health.Value);
 
-        SetPlayerName(playerName.Value.ToString());
-        SetPlayerColor(m_ShipGlowDefaultColor);
+       // SetPlayerName(playerName.Value.ToString());
+       // SetPlayerColor(m_ShipGlowDefaultColor);
     }
 
     public override void OnNetworkDespawn() {
@@ -468,7 +469,7 @@ public class ShipControl : NetworkBehaviour, IDamageable {
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetNameServerRpc(string name) {
         playerName.Value = name;
     }

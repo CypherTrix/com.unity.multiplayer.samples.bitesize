@@ -114,14 +114,14 @@ public class NetworkManagerHud : NetworkBehaviour {
     }
 
     void OnOnClientConnectedCallback(ulong clientId) {
-        if (clientPlayerData.TryAdd(m_NetworkManager.LocalClientId, new ClientPlayerData(GameManager.Instance.PlayerData.PlayerName, GameManager.Instance.PlayerData.PlayerColor))) {
-            Debug.Log($"Add User Data {clientId} : {GameManager.Instance.PlayerData.PlayerName}");
-        } else {
-            Debug.Log($"User ID {clientId} alreedy added");
-        }
+       
+        //if (clientPlayerData.TryAdd(m_NetworkManager.LocalClientId, new ClientPlayerData(GameManager.Instance.PlayerData.PlayerName, GameManager.Instance.PlayerData.PlayerColor))) {
+        //    Debug.Log($"Add User Data {clientId} : {GameManager.Instance.PlayerData.PlayerName}");
+        //} else {
+        //    Debug.Log($"User ID {clientId} alreedy added");
+        //}
         ShowMainMenuUI(false);
         ShowInGameUI(true);
-
     }
 
     void OnOnClientDisconnectCallback(ulong clientId) {
